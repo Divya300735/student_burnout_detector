@@ -1,0 +1,12 @@
+{
+  "backup_timestamp": "20260313_213838",
+  "backup_date": "2026-03-13T21:38:38.541542",
+  "items_backed_up": [
+    "data",
+    "reports",
+    "exports",
+    "static/charts",
+    "static/graphs"
+  ],
+  "total_items": 5
+}

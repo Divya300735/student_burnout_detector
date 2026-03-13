@@ -1,0 +1,33 @@
+Early Statistical Detection of Academic Burnout
+
+Dataset Summary
+Number of Students: 156
+Average Sleep Hours: 6.21
+Average Study Hours: 6.30
+Average Stress Level: 5.87
+Average Screen Time: 7.62
+
+Statistical Analysis
+Sleep Hours - Mean: 6.21, Median: 6.35, Variance: 0.92, Std Dev: 0.96
+Study Hours - Mean: 6.30, Median: 6.50, Variance: 3.43, Std Dev: 1.85
+Stress Level - Mean: 5.87, Median: 6.25, Variance: 4.95, Std Dev: 2.23
+Screen Time - Mean: 7.62, Median: 7.95, Variance: 2.81, Std Dev: 1.68
+
+BURNOUT RISK ANALYSIS
+Low Risk Students: 52
+Medium Risk Students: 61
+High Risk Students: 43
+
+Correlation Insights
+Higher stress strongly correlates with burnout.
+Lower sleep duration increases burnout risk.
+
+Graph Analysis
+Risk Distribution Bar Chart shows counts of students in each risk category.
+Risk Pie Chart shows the percentage breakdown of risk levels.
+Burnout Score Histogram shows that most students fall between burnout scores 3 to 6.
+
+Recommendations
+Increase sleep duration.
+Reduce screen time.
+Encourage stress management activities.

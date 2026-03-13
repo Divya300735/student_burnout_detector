@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Academic Burnout Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🎓 Academic Burnout Detection</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/dashboard" class="nav-link active">Dashboard</a></li>
+                <li><a href="/predict" class="nav-link">Calculator</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <section class="section">
+            <h1>📊 Analytics Dashboard</h1>
+            <p>Explore statistical graphs and visualizations of student burnout data</p>
+        </section>
+
+        <!-- Distribution Graphs -->
+        <section class="section">
+            <h2>Distribution Analysis</h2>
+            <div class="grid grid-2">
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/sleep_distribution.png') }}" alt="Sleep Distribution">
+                    <p>Sleep Hours Distribution</p>
+                </div>
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/stress_distribution.png') }}" alt="Stress Distribution">
+                    <p>Stress Level Distribution</p>
+                </div>
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/burnout_distribution.png') }}" alt="Burnout Distribution">
+                    <p>Burnout Score Distribution</p>
+                </div>
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/study_hours_boxplot.png') }}" alt="Study Hours Boxplot">
+                    <p>Study Hours by Risk Category</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scatter Plots -->
+        <section class="section">
+            <h2>Correlation Analysis - Scatter Plots</h2>
+            <div class="grid grid-2">
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/sleep_vs_burnout.png') }}" alt="Sleep vs Burnout">
+                    <p>Sleep Hours vs Burnout Score</p>
+                </div>
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/stress_vs_burnout.png') }}" alt="Stress vs Burnout">
+                    <p>Stress Level vs Burnout Score</p>
+                </div>
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename='graphs/screen_vs_burnout.png') }}" alt="Screen Time vs Burnout">
+                    <p>Screen Time vs Burnout Score</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Correlation Heatmap -->
+        <section class="section">
+            <h2>Correlation Matrix Heatmap</h2>
+            <div class="graph-card graph-card-full">
+                <img src="{{ url_for('static', filename='graphs/correlation_heatmap.png') }}" alt="Correlation Heatmap">
+                <p>Pearson Correlation Matrix - All Variables</p>
+            </div>
+        </section>
+
+        <!-- Risk Distribution -->
+        <section class="section">
+            <h2>Risk Distribution</h2>
+            <div class="grid grid-2">
+                <div class="graph-card">
+                    {% if risk_files.get('risk_pie_chart') %}
+                    <img src="{{ url_for('static', filename=risk_files.get('risk_pie_chart')) }}" alt="Risk Distribution">
+                    <p>Burnout Risk Category Distribution</p>
+                    {% else %}
+                    <p>No pie chart available</p>
+                    {% endif %}
+                </div>
+                <div class="graph-card">
+                    {% if risk_files.get('risk_bar_chart') %}
+                    <img src="{{ url_for('static', filename=risk_files.get('risk_bar_chart')) }}" alt="Risk Bar Chart">
+                    <p>Count of Students by Risk Level</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="grid grid-2" style="margin-top:20px;">
+                <div class="graph-card">
+                    {% if risk_files.get('burnout_histogram') %}
+                    <img src="{{ url_for('static', filename=risk_files.get('burnout_histogram')) }}" alt="Burnout Histogram">
+                    <p>Burnout Score Histogram</p>
+                    {% endif %}
+                </div>
+                <div class="card">
+                    <h3>📊 Risk Categories Explained</h3>
+                    <div class="risk-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #90EE90;"></span>
+                            <div>
+                                <strong>Low Risk (0-4)</strong>
+                                <p>Healthy lifestyle balance maintained</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #FFD700;"></span>
+                            <div>
+                                <strong>Moderate Risk (4-7)</strong>
+                                <p>Some burnout indicators present</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #FF6B6B;"></span>
+                            <div>
+                                <strong>High Risk (7-10)</strong>
+                                <p>Significant burnout risk detected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Burnout Indicators -->
+
+        <!-- Advanced Risk Insights -->
+        <section class="section">
+            <h2>Advanced Risk Insights</h2>
+            <div class="grid grid-2">
+                {% if risk_files.get('risk_trend') %}
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename=risk_files.get('risk_trend')) }}" alt="Risk Trend">
+                    <p>High Risk Trend Over Time</p>
+                </div>
+                {% endif %}
+                {% if risk_files.get('department_highrisk_bar') %}
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename=risk_files.get('department_highrisk_bar')) }}" alt="Department Risk">
+                    <p>High Risk by Department</p>
+                </div>
+                {% endif %}
+                {% if risk_files.get('sleep_vs_burnout_scatter') %}
+                <div class="graph-card">
+                    <img src="{{ url_for('static', filename=risk_files.get('sleep_vs_burnout_scatter')) }}" alt="Lifestyle Impact">
+                    <p>Sleep vs Burnout Score</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        <section class="section">
+            <h2>Strongest Burnout Indicators</h2>
+            <div class="card">
+                <div id="burnout-indicators" class="loading">Loading indicators...</div>
+            </div>
+        </section>
+
+        <!-- Correlation Info -->
+        <section class="section">
+            <h2>Statistical Insights</h2>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>🔍 Key Finding 1: Sleep Duration</h3>
+                    <p>Students sleeping less than 5 hours show significantly higher burnout risk compared to those sleeping 7+ hours.</p>
+                </div>
+                <div class="card">
+                    <h3>🔍 Key Finding 2: Stress Level</h3>
+                    <p>Stress level is the strongest predictor of burnout, with high correlation across all burnout indicators.</p>
+                </div>
+                <div class="card">
+                    <h3>🔍 Key Finding 3: Screen Time</h3>
+                    <p>Excessive screen time (>8 hours) significantly increases burnout risk and sleep disruption.</p>
+                </div>
+                <div class="card">
+                    <h3>🔍 Key Finding 4: Physical Activity</h3>
+                    <p>Regular physical activity is protective against burnout, showing inverse correlation with risk scores.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Academic Burnout Detection System | Statistical Analysis Based</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Load burnout indicators
+        fetch('/api/correlation')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const indicators = data.data.burnout_indicators;
+                    let html = '<div class="indicators-list">';
+                    let index = 1;
+                    for (const [indicator, correlation] of Object.entries(indicators)) {
+                        const color = correlation > 0 ? '#FF6B6B' : '#90EE90';
+                        const arrow = correlation > 0 ? '↑' : '↓';
+                        html += `
+                            <div class="indicator-item">
+                                <span class="indicator-rank">${index}</span>
+                                <span class="indicator-name">${indicator}</span>
+                                <span class="indicator-value" style="color: ${color};">${correlation.toFixed(4)} ${arrow}</span>
+                            </div>
+                        `;
+                        index++;
+                    }
+                    html += '</div>';
+                    document.getElementById('burnout-indicators').innerHTML = html;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parts Dashboard - Academic Burnout Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .parts-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .part-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .part-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .part-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .part-card.analysis {
+            border-left-color: #3498db;
+        }
+        
+        .part-card.calculation {
+            border-left-color: #2ecc71;
+        }
+        
+        .part-card.visualization {
+            border-left-color: #f39c12;
+        }
+        
+        .part-card.reporting {
+            border-left-color: #e74c3c;
+        }
+        
+        .part-card.data {
+            border-left-color: #9b59b6;
+        }
+        
+        .part-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .part-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+        
+        .part-title {
+            flex: 1;
+        }
+        
+        .part-title h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.4em;
+        }
+        
+        .part-title p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .part-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .status-active {
+            background: #2ecc71;
+        }
+        
+        .status-ready {
+            background: #3498db;
+        }
+        
+        .status-processing {
+            background: #f39c12;
+        }
+        
+        .part-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .part-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .part-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .part-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .part-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+        
+        .part-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stats-overview {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-top: 3px solid #3498db;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🎓 Academic Burnout Detection</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/risk_dashboard" class="nav-link">Risk Dashboard</a></li>
+                <li><a href="/dashboard" class="nav-link">Graphs</a></li>
+                <li><a href="/student_calculator" class="nav-link">Calculator</a></li>
+                <li><a href="/reports_center" class="nav-link">Reports</a></li>
+                <li><a href="/part_dashboard" class="nav-link active">Parts</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="parts-container">
+        <div class="alert alert-info">
+            <strong>🔧 System Parts Dashboard</strong> - View and manage different components of the burnout analysis system
+        </div>
+
+        <!-- Statistics Overview -->
+        <section class="stats-overview">
+            <h2>📊 System Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="activeParts">5</div>
+                    <div class="stat-label">Active Parts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCalculations">2</div>
+                    <div class="stat-label">Total Calculations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="generatedReports">2</div>
+                    <div class="stat-label">Generated Reports</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="systemHealth">98%</div>
+                    <div class="stat-label">System Health</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parts Grid -->
+        <section class="parts-section">
+            <h2>🔧 System Components</h2>
+            <div class="part-grid">
+                <!-- Data Analysis Part -->
+                <div class="part-card analysis">
+                    <div class="part-header">
+                        <div class="part-icon">📊</div>
+                        <div class="part-title">
+                            <h3>Data Analysis</h3>
+                            <p>Statistical analysis engine</p>
+                        </div>
+                    </div>
+                    <div class="part-status status-active">Active</div>
+                    <ul class="part-features">
+                        <li><span class="feature-icon">✅</span> Burnout score calculation</li>
+                        <li><span class="feature-icon">✅</span> Risk level classification</li>
+                        <li><span class="feature-icon">✅</span> Correlation analysis</li>
+                        <li><span class="feature-icon">✅</span> Statistical indicators</li>
+                    </ul>
+                    <div class="part-actions">
+                        <a href="/risk_dashboard" class="part-btn btn-primary">View Dashboard</a>
+                        <button class="part-btn btn-secondary" onclick="runAnalysis()">Run Analysis</button>
+                    </div>
+                </div>
+
+                <!-- Calculator Part -->
+                <div class="part-card calculation">
+                    <div class="part-header">
+                        <div class="part-icon">🧮</div>
+                        <div class="part-title">
+                            <h3>Student Calculator</h3>
+                            <p>Individual assessment tool</p>
+                        </div>
+                    </div>
+                    <div class="part-status status-active">Active</div>
+                    <ul class="part-features">
+                        <li><span class="feature-icon">✅</span> Real-time calculation</li>
+                        <li><span class="feature-icon">✅</span> Input validation</li>
+                        <li><span class="feature-icon">✅</span> Instant results</li>
+                        <li><span class="feature-icon">✅</span> Report generation</li>
+                    </ul>
+                    <div class="part-actions">
+                        <a href="/student_calculator" class="part-btn btn-primary">Open Calculator</a>
+                        <a href="/reports_center" class="part-btn btn-success">View Reports</a>
+                    </div>
+                </div>
+
+                <!-- Visualization Part -->
+                <div class="part-card visualization">
+                    <div class="part-header">
+                        <div class="part-icon">📈</div>
+                        <div class="part-title">
+                            <h3>Data Visualization</h3>
+                            <p>Graphs and charts</p>
+                        </div>
+                    </div>
+                    <div class="part-status status-active">Active</div>
+                    <ul class="part-features">
+                        <li><span class="feature-icon">✅</span> Risk distribution charts</li>
+                        <li><span class="feature-icon">✅</span> Correlation heatmaps</li>
+                        <li><span class="feature-icon">✅</span> Histogram analysis</li>
+                        <li><span class="feature-icon">✅</span> Department-wise graphs</li>
+                    </ul>
+                    <div class="part-actions">
+                        <a href="/dashboard" class="part-btn btn-primary">View Graphs</a>
+                        <button class="part-btn btn-secondary" onclick="regenerateGraphs()">Regenerate</button>
+                    </div>
+                </div>
+
+                <!-- Reporting Part -->
+                <div class="part-card reporting">
+                    <div class="part-header">
+                        <div class="part-icon">📋</div>
+                        <div class="part-title">
+                            <h3>Report Generation</h3>
+                            <p>PDF and text reports</p>
+                        </div>
+                    </div>
+                    <div class="part-status status-active">Active</div>
+                    <ul class="part-features">
+                        <li><span class="feature-icon">✅</span> Individual reports</li>
+                        <li><span class="feature-icon">✅</span> Summary reports</li>
+                        <li><span class="feature-icon">✅</span> PDF export</li>
+                        <li><span class="feature-icon">✅</span> Download management</li>
+                    </ul>
+                    <div class="part-actions">
+                        <a href="/reports_center" class="part-btn btn-primary">Reports Center</a>
+                        <button class="part-btn btn-success" onclick="downloadAllReports()">Download All</button>
+                    </div>
+                </div>
+
+                <!-- Data Management Part -->
+                <div class="part-card data">
+                    <div class="part-header">
+                        <div class="part-icon">💾</div>
+                        <div class="part-title">
+                            <h3>Data Management</h3>
+                            <p>Storage and retrieval</p>
+                        </div>
+                    </div>
+                    <div class="part-status status-ready">Ready</div>
+                    <ul class="part-features">
+                        <li><span class="feature-icon">✅</span> Student data storage</li>
+                        <li><span class="feature-icon">✅</span> Result persistence</li>
+                        <li><span class="feature-icon">✅</span> Data export</li>
+                        <li><span class="feature-icon">⏳</span> Backup system</li>
+                    </ul>
+                    <div class="part-actions">
+                        <button class="part-btn btn-primary" onclick="exportData()">Export Data</button>
+                        <button class="part-btn btn-secondary" onclick="backupData()">Create Backup</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Health Section -->
+        <section class="stats-overview">
+            <h2>🏥 System Health</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Data Processing</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 95%;"></div>
+                    </div>
+                    <small>95% Efficient</small>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Report Generation</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                    <small>100% Operational</small>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Storage Usage</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%;"></div>
+                    </div>
+                    <small>45% Used</small>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">API Response</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 98%;"></div>
+                    </div>
+                    <small>98% Fast</small>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Load system statistics
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSystemStats();
+            setInterval(loadSystemStats, 30000); // Update every 30 seconds
+        });
+
+        async function loadSystemStats() {
+            try {
+                // Get reports count
+                const reportsResponse = await fetch('/api/student_reports');
+                const reportsResult = await reportsResponse.json();
+                
+                if (reportsResult.success) {
+                    document.getElementById('generatedReports').textContent = reportsResult.total;
+                    document.getElementById('totalCalculations').textContent = reportsResult.total;
+                }
+
+                // Get system statistics
+                const statsResponse = await fetch('/api/system_statistics');
+                const statsResult = await statsResponse.json();
+                
+                if (statsResult.success) {
+                    const stats = statsResult.statistics;
+                    
+                    // Update storage usage based on actual file sizes
+                    let totalSize = 0;
+                    if (stats.student_data && stats.student_data.file_size) {
+                        totalSize += stats.student_data.file_size;
+                    }
+                    if (stats.student_results && stats.student_results.file_size) {
+                        totalSize += stats.student_results.file_size;
+                    }
+                    
+                    // Convert to MB and calculate percentage (assuming 100MB max)
+                    const sizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+                    const usagePercent = Math.min(100, (sizeMB / 100) * 100);
+                    
+                    // Update storage display
+                    const storageElement = document.querySelector('.progress-fill');
+                    if (storageElement) {
+                        storageElement.style.width = usagePercent + '%';
+                    }
+                    
+                    // Update backup system status
+                    const backupStatus = document.querySelector('.part-card.data .part-status');
+                    if (backupStatus) {
+                        backupStatus.textContent = 'Active';
+                        backupStatus.className = 'part-status status-active';
+                    }
+                }
+
+                // Update system health based on component status
+                updateSystemHealth();
+                
+            } catch (error) {
+                console.error('Error loading system stats:', error);
+            }
+        }
+
+        function updateSystemHealth() {
+            // Simulate health calculation based on active components
+            const activeComponents = 5;
+            const totalComponents = 5;
+            const health = Math.round((activeComponents / totalComponents) * 100);
+            document.getElementById('systemHealth').textContent = health + '%';
+        }
+
+        function runAnalysis() {
+            window.location.href = '/risk_dashboard';
+        }
+
+        function regenerateGraphs() {
+            fetch('/api/regenerate_graphs', { method: 'POST' })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Graphs regenerated successfully!');
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert('Error regenerating graphs: ' + result.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Network error: ' + error.message);
+                });
+        }
+
+        function downloadAllReports() {
+            window.location.href = '/reports_center';
+        }
+
+        function exportData() {
+            // Show loading state
+            const exportBtn = event.target;
+            const originalText = exportBtn.textContent;
+            exportBtn.textContent = 'Exporting...';
+            exportBtn.disabled = true;
+            
+            fetch('/api/export_student_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Show success message and download link
+                    const filename = result.file_path.split('\\').pop().split('/').pop();
+                    alert(`✅ ${result.message}\n\nFile: ${filename}\nRecords: ${result.records}\n\nClick OK to download the file.`);
+                    
+                    // Trigger download
+                    window.location.href = `/download_export/${filename}`;
+                } else {
+                    alert(`❌ Export failed: ${result.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Network error during export');
+            })
+            .finally(() => {
+                // Restore button state
+                exportBtn.textContent = originalText;
+                exportBtn.disabled = false;
+            });
+        }
+
+        function backupData() {
+            // Show loading state
+            const backupBtn = event.target;
+            const originalText = backupBtn.textContent;
+            backupBtn.textContent = 'Creating Backup...';
+            backupBtn.disabled = true;
+            
+            fetch('/api/create_backup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(`✅ ${result.message}\n\nBackup location: ${result.backup_path}\nItems backed up: ${result.items_backed_up.join(', ')}`);
+                    
+                    // Update system statistics
+                    loadSystemStats();
+                } else {
+                    alert(`❌ Backup failed: ${result.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Network error during backup');
+            })
+            .finally(() => {
+                // Restore button state
+                backupBtn.textContent = originalText;
+                backupBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

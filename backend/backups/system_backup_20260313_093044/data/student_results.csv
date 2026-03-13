@@ -1,0 +1,5 @@
+timestamp,student_id,sleep_hours,study_hours,screen_time,stress_level,physical_activity,assignment_load,burnout_score,risk_level
+2026-03-13 01:25:06,TEST001,6.5,7.2,8.1,6.8,3.5,7.0,6.81,Moderate Risk
+2026-03-13 01:26:17,24bce217,2.0,6.0,7.0,8.0,2.0,6.9,7.24,High Risk
+2026-03-13 01:31:24,24bce217,2.0,6.0,7.0,8.0,2.0,6.9,7.24,High Risk
+2026-03-13 08:46:24,24bce217,2.0,6.0,7.0,8.0,2.0,6.9,7.24,High Risk

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Burnout Detection System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🎓 Academic Burnout Detection</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link active">Home</a></li>
+                <li><a href="/risk_dashboard" class="nav-link">Risk Dashboard</a></li>
+                <li><a href="/dashboard" class="nav-link">Graphs</a></li>
+                <li><a href="/student_calculator" class="nav-link">Calculator</a></li>
+                <li><a href="/reports_center" class="nav-link">Reports</a></li>
+                <li><a href="/part_dashboard" class="nav-link">Parts</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Early Statistical Detection of Academic Burnout</h1>
+            <p>Analyze student lifestyle data and detect burnout risks using statistical methods</p>
+            <div class="hero-buttons">
+                <a href="/risk_dashboard" class="btn btn-primary">Risk Dashboard</a>
+                <a href="/student_calculator" class="btn btn-secondary">Calculate Score</a>
+                <a href="/reports_center" class="btn btn-secondary">View Reports</a>
+                <a href="/part_dashboard" class="btn btn-secondary">System Parts</a>
+                <a href="/dashboard" class="btn btn-secondary">View Analytics</a>
+            </div>
+        </section>
+
+        <!-- Dataset Summary Section -->
+        <section class="section">
+            <h2>Dataset Overview</h2>
+            <div id="dataset-summary" class="grid grid-2">
+                <div class="card loading">Loading dataset...</div>
+                <div class="card loading">Loading dataset...</div>
+            </div>
+        </section>
+
+        <!-- Key Statistics Section -->
+        <section class="section">
+            <h2>Key Statistics</h2>
+            <div id="statistics" class="grid grid-3">
+                <div class="card loading">Loading statistics...</div>
+                <div class="card loading">Loading statistics...</div>
+                <div class="card loading">Loading statistics...</div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section">
+            <h2>How It Works</h2>
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>📊 Data Collection</h3>
+                    <p>Students provide lifestyle data: sleep hours, study hours, screen time, stress level, physical activity, and assignment load.</p>
+                </div>
+                <div class="card">
+                    <h3>📈 Statistical Analysis</h3>
+                    <p>Our system uses correlation analysis, descriptive statistics, and regression models to identify burnout patterns.</p>
+                </div>
+                <div class="card">
+                    <h3>⚠️ Risk Assessment</h3>
+                    <p>Calculate burnout score and categorize risk level (Low, Moderate, High) with personalized recommendations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Burnout Score Formula -->
+        <section class="section">
+            <h2>Burnout Score Formula</h2>
+            <div class="formula-box">
+                <p><strong>BurnoutScore = </strong></p>
+                <p class="formula">
+                    0.35 × stress_level + 0.25 × screen_time + 0.20 × study_hours - 0.30 × sleep_hours - 0.05 × physical_activity + 0.05 × assignment_load
+                </p>
+                <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                    <strong>Normalized to 0-10 scale</strong> where 0-4 = Low Risk, 4-7 = Moderate Risk, 7-10 = High Risk
+                </p>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="section">
+            <h2>Quick Start</h2>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>View Graphs & Insights</h3>
+                    <p>Explore histograms, scatter plots, correlation heatmaps, and risk distribution charts.</p>
+                    <a href="/dashboard" class="btn btn-primary">Go to Graphs</a>
+                </div>
+                <div class="card">
+                    <h3>Calculate Your Burnout Risk</h3>
+                    <p>Enter your lifestyle data and get a personalized burnout risk assessment with recommendations.</p>
+                    <a href="/predict" class="btn btn-primary">Open Calculator</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistical Method Info -->
+        <section class="section">
+            <h2>Statistical Methods Used</h2>
+            <div class="info-box">
+                <h3>✓ Descriptive Statistics</h3>
+                <p>Mean, median, variance, and standard deviation for all variables</p>
+                
+                <h3>✓ Correlation Analysis</h3>
+                <p>Pearson correlation matrix to identify strongest burnout indicators</p>
+                
+                <h3>✓ Linear Regression</h3>
+                <p>Multiple linear regression to model burnout based on lifestyle factors</p>
+                
+                <h3>✓ Risk Assessment</h3>
+                <p>Probability estimation using normal distribution and threshold-based categorization</p>
+                
+                <h3>✓ Rule-Based Logic</h3>
+                <p>Threshold-based risk levels and personalized recommendation engine</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Academic Burnout Detection System | Statistical Analysis Based</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Load dataset summary
+        fetch('/api/dataset_summary')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const summary = data.data;
+                    const summaryHtml = `
+                        <div class="card">
+                            <h3>📚 Dataset Size</h3>
+                            <p class="stat-value">${summary.total_students}</p>
+                            <p class="stat-label">Students Analyzed</p>
+                        </div>
+                        <div class="card">
+                            <h3>📝 Variables</h3>
+                            <p class="stat-value">${summary.variables.length}</p>
+                            <p class="stat-label">Lifestyle Factors</p>
+                        </div>
+                    `;
+                    document.getElementById('dataset-summary').innerHTML = summaryHtml;
+                }
+            });
+
+        // Load statistics
+        fetch('/api/statistics')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const stats = data.data;
+                    const statsHtml = `
+                        <div class="card">
+                            <h3>😴 Sleep Hours</h3>
+                            <p class="stat-value">${stats.sleep_hours.mean.toFixed(2)}</p>
+                            <p class="stat-label">Average (hours)</p>
+                            <p class="stat-detail">σ = ${stats.sleep_hours.std_dev.toFixed(2)}</p>
+                        </div>
+                        <div class="card">
+                            <h3>📚 Study Hours</h3>
+                            <p class="stat-value">${stats.study_hours.mean.toFixed(2)}</p>
+                            <p class="stat-label">Average (hours)</p>
+                            <p class="stat-detail">σ = ${stats.study_hours.std_dev.toFixed(2)}</p>
+                        </div>
+                        <div class="card">
+                            <h3>😰 Stress Level</h3>
+                            <p class="stat-value">${stats.stress_level.mean.toFixed(2)}</p>
+                            <p class="stat-label">Average (/10)</p>
+                            <p class="stat-detail">σ = ${stats.stress_level.std_dev.toFixed(2)}</p>
+                        </div>
+                    `;
+                    document.getElementById('statistics').innerHTML = statsHtml;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

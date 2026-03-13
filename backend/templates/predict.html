@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burnout Risk Calculator - Academic Burnout Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🎓 Academic Burnout Detection</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/risk_dashboard" class="nav-link">Risk Dashboard</a></li>
+                <li><a href="/dashboard" class="nav-link">Graphs</a></li>
+                <li><a href="/predict" class="nav-link active">Calculator</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <section class="section">
+            <h1>⚠️ Burnout Risk Calculator</h1>
+            <p>Enter your lifestyle data to assess your burnout risk</p>
+        </section>
+
+        <div class="grid grid-2">
+            <!-- Input Form -->
+            <section class="section">
+                <h2>Your Data</h2>
+                <form id="burnout-form" class="form">
+                    <div class="form-group">
+                        <label for="sleep_hours">😴 Sleep Hours per Night</label>
+                        <input type="number" id="sleep_hours" name="sleep_hours" min="0" max="12" step="0.5" value="7" required>
+                        <small>Recommended: 7-8 hours</small>
+                        <div class="slider-value" id="sleep-value">7</div>
+                        <input type="range" id="sleep_hours_slider" min="0" max="12" step="0.5" value="7" class="slider">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="study_hours">📚 Study Hours per Day</label>
+                        <input type="number" id="study_hours" name="study_hours" min="0" max="12" step="0.5" value="5" required>
+                        <small>Recommended: 4-6 hours</small>
+                        <div class="slider-value" id="study-value">5</div>
+                        <input type="range" id="study_hours_slider" min="0" max="12" step="0.5" value="5" class="slider">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="screen_time">📱 Screen Time per Day</label>
+                        <input type="number" id="screen_time" name="screen_time" min="0" max="14" step="0.5" value="6" required>
+                        <small>Recommended: 6-8 hours</small>
+                        <div class="slider-value" id="screen-value">6</div>
+                        <input type="range" id="screen_time_slider" min="0" max="14" step="0.5" value="6" class="slider">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stress_level">😤 Stress Level</label>
+                        <input type="number" id="stress_level" name="stress_level" min="0" max="10" step="0.5" value="5" required>
+                        <small>0 = No stress, 10 = Maximum stress</small>
+                        <div class="slider-value" id="stress-value">5</div>
+                        <input type="range" id="stress_level_slider" min="0" max="10" step="0.5" value="5" class="slider">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="physical_activity">🏃 Physical Activity Level</label>
+                        <input type="number" id="physical_activity" name="physical_activity" min="0" max="10" step="0.5" value="5" required>
+                        <small>0 = Sedentary, 10 = Highly active</small>
+                        <div class="slider-value" id="activity-value">5</div>
+                        <input type="range" id="physical_activity_slider" min="0" max="10" step="0.5" value="5" class="slider">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignment_load">📝 Assignment Load</label>
+                        <input type="number" id="assignment_load" name="assignment_load" min="0" max="10" step="0.5" value="5" required>
+                        <small>0 = No assignments, 10 = Heavy load</small>
+                        <div class="slider-value" id="load-value">5</div>
+                        <input type="range" id="assignment_load_slider" min="0" max="10" step="0.5" value="5" class="slider">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Calculate Risk</button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section class="section">
+                <h2>Your Results</h2>
+                <div id="results" class="results-hidden">
+                    <!-- Burnout Score Card -->
+                    <div class="card result-card">
+                        <h3>Burnout Score</h3>
+                        <div class="score-display">
+                            <div class="score-circle" id="score-circle">-</div>
+                            <span id="score-text" class="score-text">/10</span>
+                        </div>
+                    </div>
+
+                    <!-- Risk Category Card -->
+                    <div class="card result-card">
+                        <h3>Risk Category</h3>
+                        <div id="risk-category" class="risk-badge">-</div>
+                        <div id="risk-description" class="risk-description">-</div>
+                    </div>
+
+                    <!-- Burnout Probability Card -->
+                    <div class="card result-card">
+                        <h3>Burnout Probability</h3>
+                        <div id="probability" class="probability">-</div>
+                        <p style="font-size: 12px; color: #999;">Estimated likelihood of burnout</p>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="card">
+                        <h3>📋 Personalized Recommendations</h3>
+                        <div id="recommendations" class="recommendations-list">
+                            Loading recommendations...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Graphs -->
+                <div id="simulation-graphs" class="section" style="width:100%">
+                    <!-- dynamically populated when user submits data -->
+                </div>
+
+                <!-- Initial Message -->
+                <div id="initial-message" class="card">
+                    <p style="text-align: center; color: #999;">Fill in your data and click "Calculate Risk" to see results</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Information Box -->
+        <section class="section">
+            <h2>Understanding Your Results</h2>
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>🟢 Low Risk (0-4)</h3>
+                    <p>You maintain a healthy lifestyle balance. Continue your current practices and stay mindful of early burnout signs.</p>
+                </div>
+                <div class="card">
+                    <h3>🟡 Moderate Risk (4-7)</h3>
+                    <p>You show some burnout indicators. Consider implementing stress management strategies and adjusting your lifestyle habits.</p>
+                </div>
+                <div class="card">
+                    <h3>🔴 High Risk (7-10)</h3>
+                    <p>You are at significant burnout risk. It's important to take action immediately. Seek support from counseling services.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistical Model Info -->
+        <section class="section">
+            <h2>How the Calculator Works</h2>
+            <div class="card">
+                <h3>Burnout Score Formula</h3>
+                <p style="font-family: monospace; background-color: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;">
+                    BurnoutScore = 0.35 × stress_level + 0.25 × screen_time + 0.20 × study_hours - 0.30 × sleep_hours - 0.05 × physical_activity + 0.05 × assignment_load
+                </p>
+                <p style="margin-top: 10px;">The score is normalized to a 0-10 scale using min-max normalization based on dataset statistics.</p>
+                
+                <h3 style="margin-top: 20px;">Component Weights</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><strong>Stress Level:</strong> 35% - Strongest burnout factor</li>
+                    <li><strong>Screen Time:</strong> 25% - Digital fatigue contributor</li>
+                    <li><strong>Study Hours:</strong> 20% - Academic workload indicator</li>
+                    <li><strong>Sleep Hours:</strong> -30% - Protective factor (negative)</li>
+                    <li><strong>Physical Activity:</strong> -5% - Protective factor (negative)</li>
+                    <li><strong>Assignment Load:</strong> +5% - Workload pressure</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Academic Burnout Detection System | Statistical Analysis Based</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Form handling
+        const form = document.getElementById('burnout-form');
+        const resultsDiv = document.getElementById('results');
+        const initialMessage = document.getElementById('initial-message');
+
+        // Sync sliders with inputs
+        const inputs = ['sleep_hours', 'study_hours', 'screen_time', 'stress_level', 'physical_activity', 'assignment_load'];
+        const displayIds = ['sleep-value', 'study-value', 'screen-value', 'stress-value', 'activity-value', 'load-value'];
+
+        inputs.forEach((input, index) => {
+            const sliderElement = document.getElementById(input + '_slider');
+            const inputElement = document.getElementById(input);
+            const displayElement = document.getElementById(displayIds[index]);
+
+            // Update display and input from slider
+            sliderElement.addEventListener('input', function() {
+                inputElement.value = this.value;
+                displayElement.textContent = parseFloat(this.value).toFixed(1);
+            });
+
+            // Update display and slider from input
+            inputElement.addEventListener('input', function() {
+                sliderElement.value = this.value;
+                displayElement.textContent = parseFloat(this.value).toFixed(1);
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = {
+                sleep_hours: parseFloat(document.getElementById('sleep_hours').value),
+                study_hours: parseFloat(document.getElementById('study_hours').value),
+                screen_time: parseFloat(document.getElementById('screen_time').value),
+                stress_level: parseFloat(document.getElementById('stress_level').value),
+                physical_activity: parseFloat(document.getElementById('physical_activity').value),
+                assignment_load: parseFloat(document.getElementById('assignment_load').value)
+            };
+
+            try {
+                // use user_graphs endpoint which returns both analysis and graphs
+                const response = await fetch('/api/user_graphs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data.data.burnout_analysis);
+                    displaySimulationGraphs(data.data.user_graphs);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error calculating burnout risk');
+            }
+        });
+
+        function displaySimulationGraphs(graphs) {
+            const container = document.getElementById('simulation-graphs');
+            container.innerHTML = '<h3>📈 Simulation Graphs</h3><div class="grid grid-3"></div>';
+            const grid = container.querySelector('.grid');
+            for (const [key, path] of Object.entries(graphs)) {
+                const title = key.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+                const imgSrc = '/static/graphs/' + path;
+                const card = document.createElement('div');
+                card.className = 'graph-card';
+                card.innerHTML = `
+                    <img src="${imgSrc}" alt="${title}">
+                    <p>${title}</p>
+                `;
+                grid.appendChild(card);
+            }
+            observeCharts(); // animate newly added charts
+        }
+
+        function displayResults(results) {
+            // Show results section
+            resultsDiv.classList.remove('results-hidden');
+            initialMessage.style.display = 'none';
+
+            // Update score
+            const score = results.burnout_score;
+            document.getElementById('score-circle').textContent = score.toFixed(1);
+            document.getElementById('score-text').textContent = '/10';
+
+            // Color the score based on risk
+            const scoreCircle = document.getElementById('score-circle');
+            if (score < 4) {
+                scoreCircle.style.backgroundColor = '#90EE90';
+                scoreCircle.style.color = '#000';
+            } else if (score < 7) {
+                scoreCircle.style.backgroundColor = '#FFD700';
+                scoreCircle.style.color = '#000';
+            } else {
+                scoreCircle.style.backgroundColor = '#FF6B6B';
+                scoreCircle.style.color = '#fff';
+            }
+
+            // Update risk category
+            const riskCategory = results.risk_category;
+            const riskBadge = document.getElementById('risk-category');
+            riskBadge.textContent = riskCategory;
+            riskBadge.className = 'risk-badge risk-' + riskCategory.toLowerCase().replace(' ', '-');
+
+            // Update probability
+            document.getElementById('probability').textContent = results.burnout_probability.toFixed(1) + '%';
+
+            // Update recommendations
+            const recommendationsHtml = results.recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <h4>${rec.category}</h4>
+                    <p><strong>${rec.message}</strong></p>
+                    <p style="font-size: 12px; color: #999;">${rec.impact}</p>
+                </div>
+            `).join('');
+            document.getElementById('recommendations').innerHTML = recommendationsHtml;
+        }
+    </script>
+</body>
+</html>
