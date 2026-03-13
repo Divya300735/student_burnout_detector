@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Early Statistical Detection of Academic Burnout
 
 A comprehensive full-stack web application that analyzes student lifestyle data and detects early signs of academic burnout using **statistical analysis methods only** (no machine learning).
@@ -380,3 +381,7 @@ For issues or questions about the statistical methods, please review:
 **Version**: 1.0
 **Last Updated**: 2026
 **Status**: Fully Functional ✅
+=======
+# student_burnout_detector
+student burnout detector
+>>>>>>> 1e2df6f0808bbe5cb008f79c61671318d38a5b82
