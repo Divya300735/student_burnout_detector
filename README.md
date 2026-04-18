@@ -369,19 +369,4 @@ This is an educational project. For improvements or extensions, please ensure:
 
 This project is provided as-is for educational purposes.
 
-## 📞 Support
 
-For issues or questions about the statistical methods, please review:
-- The analysis report in `reports/analysis_report.txt`
-- Comments in individual Python modules
-- Statistical method documentation in docstrings
-
----
-
-**Version**: 1.0
-**Last Updated**: 2026
-**Status**: Fully Functional ✅
-=======
-# student_burnout_detector
-student burnout detector
->>>>>>> 1e2df6f0808bbe5cb008f79c61671318d38a5b82
